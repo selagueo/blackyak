@@ -11,10 +11,13 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+
 public class Main {
 
     // The window handle
     private long window;
+    GameManager gameManager;
+
 
     public void run() {
         System.out.println("Hello LWJGL " + Version.getVersion() + "!");
@@ -44,9 +47,12 @@ public class Main {
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+
 
         // Create the window
-        window = glfwCreateWindow(300, 300, "Hello World!", NULL, NULL);
+        window = glfwCreateWindow(1280, 720, "Black Yak", NULL, NULL);
         if ( window == NULL )
             throw new RuntimeException("Failed to create the GLFW window");
 
@@ -55,6 +61,9 @@ public class Main {
             if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
                 glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
         });
+
+        glfwSetKeyCallback(window, Keyboard::kayCallback);
+        glfwSetMonitorCallback(Monitor::monitorCallback);
 
         // Get the thread stack and push a new frame
         try ( MemoryStack stack = stackPush() ) {
@@ -92,13 +101,23 @@ public class Main {
         // bindings available for use.
         GL.createCapabilities();
 
+        gameManager = new GameManager();
+        gameManager.init();
+
         // Set the clear color
-        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(0.7f, 0.7f, 1.0f, 0.0f);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while ( !glfwWindowShouldClose(window) ) {
+
+            // Update object, so we clean the screen.
+            gameManager.update(0.0f);
+
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+
+            // Draw updated object over the clean screen.
+            gameManager.render();
 
             glfwSwapBuffers(window); // swap the color buffers
 
@@ -111,5 +130,4 @@ public class Main {
     public static void main(String[] args) {
         new Main().run();
     }
-
 }
