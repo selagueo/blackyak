@@ -4,6 +4,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
 import java.nio.*;
+import java.util.LinkedList;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -128,6 +129,14 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        Deck desk = new Deck();
+        System.out.println("Deck----------------------");
+        desk.print();
+        System.out.println("Deck Shuffle--------------------------");
+        desk.shuffle();
+        desk.print();
+
+
         new Main().run();
     }
 }

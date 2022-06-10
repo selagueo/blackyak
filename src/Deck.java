@@ -2,6 +2,7 @@ import enums.CardRanks;
 import enums.CardSuits;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
 
 public class Deck {
@@ -9,60 +10,12 @@ public class Deck {
     private static int CARD_TABLE_SIZE = 52;
 
     private final int MAX_CARDS = 52;
+    private final int MAX_SHUFFLE_ITER = 512;
     private int topCard = 0;
-    private ArrayList<Integer> indices;
+    private LinkedList<CardEntity> cards;
     private Random random;
 
-    static {
-        cardsTable = new ArrayList<Card>(CARD_TABLE_SIZE);
-    }
-
-    public Deck() {
-        random = new Random();
-        indices = new ArrayList<Integer>(MAX_CARDS);
-        setupDeck();
-        shuffleDeck();
-    }
-
-    public Card getCard(boolean faceDown) {
-        if (topCard < MAX_CARDS) {
-            int cardIndex = indices.get(topCard++);
-            Card card = cardsTable.get(cardIndex);
-            card.setFaceDown(faceDown);
-            return card;
-        } else {
-            return null;
-        }
-    }
-
-    public void shuffleDeck() {
-        topCard = 0;
-        indices.clear();
-        while(indices.size() < MAX_CARDS) {
-            int cardIndex = random.nextInt(MAX_CARDS);
-            if(!indices.contains(cardIndex)) {
-                indices.add(cardIndex);
-            }
-        }
-    }
-
-    public void printDeck() {
-        for(int i = 0; i < indices.size(); i++) {
-            int cardIndex = indices.get(i);
-            System.out.println((i+1) + " Rank: " + cardsTable.get(cardIndex).getRank() +
-                                       " Suit: " + cardsTable.get(cardIndex).getSuit());
-        }
-    }
-
-    private void setupDeck() {
-        topCard = 0;
-        addSuitToDeck(CardSuits.CLUBS);
-        addSuitToDeck(CardSuits.SPADES);
-        addSuitToDeck(CardSuits.HEARTS);
-        addSuitToDeck(CardSuits.DIAMONDS);
-    }
-
-    private void addSuitToDeck(CardSuits suit) {
+    private static void addSuitToDeck(CardSuits suit) {
         cardsTable.add(new Card(suit, CardRanks.ACE));
         cardsTable.add(new Card(suit, CardRanks.TWO));
         cardsTable.add(new Card(suit, CardRanks.THREE));
@@ -76,5 +29,48 @@ public class Deck {
         cardsTable.add(new Card(suit, CardRanks.JACK));
         cardsTable.add(new Card(suit, CardRanks.QUEEN));
         cardsTable.add(new Card(suit, CardRanks.KING));
+    }
+
+    public static ArrayList<Card> getCardsTable() {
+        return cardsTable;
+    }
+
+    static {
+        cardsTable = new ArrayList<Card>(CARD_TABLE_SIZE);
+        addSuitToDeck(CardSuits.CLUBS);
+        addSuitToDeck(CardSuits.SPADES);
+        addSuitToDeck(CardSuits.HEARTS);
+        addSuitToDeck(CardSuits.DIAMONDS);
+    }
+
+    public Deck() {
+        random = new Random();
+        cards = new LinkedList<CardEntity>();
+        setup();
+    }
+    private void setup() {
+        for (int cardIndex = 0; cardIndex < MAX_CARDS; cardIndex++) {
+            cards.add(new CardEntity(cardIndex));
+        }
+    }
+    public void shuffle() {
+        topCard = 0;
+        for (int shuffleIter = 0; shuffleIter < MAX_SHUFFLE_ITER; shuffleIter++) {
+            int cardIndex = random.nextInt(cards.size());
+            int otherCardIndex = random.nextInt(cards.size());
+            CardEntity card = cards.get(cardIndex);
+            CardEntity otherCard = cards.get(otherCardIndex);
+            cards.set(otherCardIndex, card);
+            cards.set(cardIndex, otherCard);
+        }
+    }
+    public CardEntity getCard(boolean faceDown) {
+        return cards.get(topCard++);
+    }
+
+    public void print() {
+        for (CardEntity card : cards) {
+            System.out.println(card.getCard());
+        }
     }
 }

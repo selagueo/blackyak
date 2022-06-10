@@ -29,7 +29,7 @@ public class Game {
 
     public void update() {
         if (state == State.PLAYER_DEALER_GET_2) {
-            deck.shuffleDeck();
+            deck.shuffle();
             handPlayer.getCard(deck, false);
             handPlayer.getCard(deck, false);
             handDealer.getCard(deck, false);

@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Hand {
-    private ArrayList<Card> hand;
+    private ArrayList<CardEntity> hand;
 
     public void getCard (Deck deck, boolean faceDown) {
         hand.add(deck.getCard(faceDown));
@@ -13,7 +13,7 @@ public class Hand {
 
     public int getHandValue () {
         int value = 0;
-        for (Card card : hand) {
+        for (CardEntity card : hand) {
             switch (card.getRank()) {
                 case ACE -> value += (value >= 11) ? 1 : 11;
                 case TWO -> value += 2;
