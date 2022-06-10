@@ -10,7 +10,7 @@ public class Transform {
     Transform(Vector2f position, Vector2f scale, float rotation)
     {
         this.position = new Vector3f(position.x, position.y, 0);
-        this.scale = new Vector3f(scale.x, scale.y, 0);
+        this.scale = new Vector3f(scale.x, scale.y, 1);
         this.rotation = rotation;
     }
 
@@ -21,7 +21,7 @@ public class Transform {
         Matrix4f rotatMat = new Matrix4f();
         transMat.translate(position);
         scaleMat.scale(scale);
-        rotatMat.rotate(rotation, new Vector3f(0, 0, 1));
+        rotatMat.rotate(rotation, new Vector3f(0, 1, 0));
         return transMat.mul(rotatMat.mul(scaleMat));
     }
 }

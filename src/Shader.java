@@ -61,7 +61,7 @@ public class Shader {
         if(success == GL_FALSE)
         {
             int len = glGetShaderi(fragmentID, GL_INFO_LOG_LENGTH);
-            System.out.println("Error: '" + fragmentFilepath + "'\n\tVertex shader compilation failed.");
+            System.out.println("Error: '" + fragmentFilepath + "'\n\tFragment shader compilation failed.");
             System.out.println(glGetShaderInfoLog(fragmentID, len));
             assert false : "";
         }

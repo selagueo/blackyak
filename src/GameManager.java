@@ -1,51 +1,90 @@
-import org.joml.Matrix4f;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
-
-import java.io.IOException;
 
 public class GameManager {
+    private Renderer renderer;
+    private Sprite background;
+    private Sprite card;
+    private Sprite chipOne;
+    private Sprite chipTwo;
+    private Sprite chipFive;
+    private Sprite chipTen;
+    private Sprite chipTwentyFive;
+    private Sprite chipHundred;
 
-    Shader defaultShader = new Shader("shaders/vertexShader.glsl",
-                                    "shaders/fragmentShader.glsl");
-    Renderer renderer = new Renderer(defaultShader);
-    Sprite testSprite = new Sprite(renderer,
-                                   new Transform(new Vector2f(0, 0), new Vector2f(100, 100), 0),
-                                   new Vector4f(0, 0, 1, 1));
-
-    Sprite testSprite1 = new Sprite(renderer,
-                                    new Transform(new Vector2f(200, 0), new Vector2f(100, 100), 0),
-                                    new Vector4f(1, 0, 1, 1));
-
-    public GameManager(){
+    private void loadAssets()
+    {
+        AssetManager.addShader("default", "shaders/vertexShader.glsl", "shaders/fragmentShader.glsl");
+        AssetManager.addShader("spritesheet", "shaders/sprVertexShader.glsl", "shaders/sprFragShader.glsl");
+        AssetManager.addTexture("table", "images/table.png");
+        AssetManager.addTexture("cardFront", "images/card_front.png");
+        AssetManager.addTexture("cardBack", "images/card_back.png");
+        AssetManager.addTexture("card", "images/card.png");
+        AssetManager.addTexture("chipOne", "images/chip_one.png");
+        AssetManager.addTexture("chipFive", "images/chip_five.png");
+        AssetManager.addTexture("chipTen", "images/chip_ten.png");
+        AssetManager.addTexture("chipTwentyFive", "images/chip_twentyfive.png");
+        AssetManager.addTexture("chipHundred", "images/chip_hundred.png");
     }
 
-    void init()
+    public void init()
     {
-        Matrix4f projectionMat = new Matrix4f();
-        projectionMat.ortho(-640, 640, -360, 360, 0, 100);
-        defaultShader.uploadMat4f("uProj", projectionMat);
+        loadAssets();
+        renderer = new Renderer();
 
-        // bind view matrix to the shader
-        Matrix4f viewMat = new Matrix4f();
-        Vector3f position = new Vector3f(0, 0, 20);
-        Vector3f target = new Vector3f(0, 0, -1);
-        Vector3f up = new Vector3f(0, 1, 0);
-        viewMat.lookAt(position, target.add(position.x, position.y, 0), up);
-        defaultShader.uploadMat4f("uView", viewMat);
+        background = new Sprite(AssetManager.getTexture("table"),
+                          1280*0.5f, 720*0.5f,
+                          1280, 720,
+                          0);
+        card = new Sprite(AssetManager.getTexture("card"),
+                    700, 400,
+                   22*4, 31*4,
+                  0,
+                 22, 31);
+        card.setSpritesheetPos(new Vector2f(0, 0));
+        chipOne = new Sprite(AssetManager.getTexture("chipOne"),
+                             200, 400,
+                             22 * 2.5f, 24 * 2.5f,
+                             0);
+        chipTwo = new Sprite(AssetManager.getTexture("chipOne"),
+                200, 405f,
+                22 * 2.5f, 24 * 2.5f,
+                0);
+        chipFive = new Sprite(AssetManager.getTexture("chipFive"),
+                250, 400,
+                22 * 2.5f, 24 * 2.5f,
+                0);
+        chipTen = new Sprite(AssetManager.getTexture("chipTen"),
+                300, 400,
+                22 * 2.5f, 24 * 2.5f,
+                0);
+        chipTwentyFive = new Sprite(AssetManager.getTexture("chipTwentyFive"),
+                250, 350,
+                22 * 2.5f, 24 * 2.5f,
+                0);
+        chipHundred = new Sprite(AssetManager.getTexture("chipHundred"),
+                200, 350,
+                22 * 2.5f, 24 * 2.5f,
+                0);
     }
 
 
-    void update(float deltaTime)
+    public void update(float deltaTime)
     {
-        testSprite1.getTransform().rotation += 0.02f;
+        card.getTransform().rotation += 0.02f;
     }
 
-    void render()
+    public void render()
     {
+        renderer.setShader(AssetManager.getShader("default"));
+        renderer.render(background);
+        renderer.render(chipOne);
+        renderer.render(chipTwo);
+        renderer.render(chipFive);
+        renderer.render(chipTen);
+        renderer.render(chipTwentyFive);
+        renderer.render(chipHundred);
+        renderer.setShader(AssetManager.getShader("spritesheet"));
+        renderer.render(card);
 
-        testSprite.render();
-        testSprite1.render();
     }
 }
