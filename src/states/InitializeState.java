@@ -1,4 +1,10 @@
 package states;
 
-public class InitializeState {
+public class InitializeState implements StateInterface {
+
+    @Override
+    public StateInterface update() {
+
+        return null;
+    }
 }

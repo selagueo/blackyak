@@ -129,14 +129,6 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        Deck desk = new Deck();
-        System.out.println("Deck----------------------");
-        desk.print();
-        System.out.println("Deck Shuffle--------------------------");
-        desk.shuffle();
-        desk.print();
-
-
         new Main().run();
     }
 }
