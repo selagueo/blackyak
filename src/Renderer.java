@@ -23,7 +23,18 @@ public class Renderer {
     private int VAO;
     private Shader shader;
 
-    public Renderer()
+    static private Renderer instance;
+
+    static public Renderer getInstance()
+    {
+        if(instance == null)
+        {
+            instance = new Renderer();
+        }
+        return instance;
+    }
+
+    private Renderer()
     {
         VAO = glGenVertexArrays();
         glBindVertexArray(VAO);
@@ -49,49 +60,6 @@ public class Renderer {
 
         glVertexAttribPointer(1, TEX_COORDS_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, TEX_COORDS_OFFSET);
         glEnableVertexAttribArray(1);
-    }
-
-    public void render(Sprite sprite)
-    {
-        Matrix4f projectionMat = new Matrix4f();
-        projectionMat.ortho(0, 1280, 0, 720, 0, 1000);
-        shader.uploadMat4f("uProj", projectionMat);
-
-        // bind view matrix to the shader
-        Matrix4f viewMat = new Matrix4f();
-        Vector3f position = new Vector3f(0, 0, 100);
-        Vector3f front = new Vector3f(position.x, position.y, -1);
-        Vector3f up = new Vector3f(0, 1, 0);
-        viewMat.lookAt(position, front, up);
-        shader.uploadMat4f("uView", viewMat);
-
-        Matrix4f worldMat = sprite.getTransform().getWorldMatrix();
-        shader.uploadMat4f("uWorld", worldMat);
-        shader.uploadVec4f("uColor", sprite.getColor());
-        if(sprite.getTexture() != null) {
-            glActiveTexture(GL_TEXTURE0);
-            shader.uploadTexture("texture0", 0);
-            sprite.getTexture().bind();
-
-            if(sprite.getRatio().x > 0.0f || sprite.getRatio().y > 0.0f)
-            {
-                shader.uploadVec2f("tile", sprite.getSpritesheetPos());
-                shader.uploadVec2f("ratio", sprite.getRatio());
-            }
-        }
-
-        shader.use();
-        ARBVertexArrayObject.glBindVertexArray(VAO);
-        GL20.glEnableVertexAttribArray(0);
-        GL20.glEnableVertexAttribArray(1);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        ARBVertexArrayObject.glBindVertexArray(0);
-        shader.detach();
-        if(sprite.getTexture() != null) {
-            sprite.getTexture().detach();
-        }
     }
 
     public int getVAO()

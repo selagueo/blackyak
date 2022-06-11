@@ -1,76 +1,66 @@
-import enums.CardRanks;
-import enums.CardSuits;
+import org.joml.Vector2f;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
 public class Deck {
-    private static ArrayList<Card> cardsTable;
-    private static int CARD_TABLE_SIZE = 52;
-
-    private final int MAX_CARDS = 52;
+    private final int DECK_AMMOUNT = 1;
     private final int MAX_SHUFFLE_ITER = 512;
-    private int topCard = 0;
-    private LinkedList<CardEntity> cards;
+    private LinkedList<Card> cards;
     private Random random;
 
-    private static void addSuitToDeck(CardSuits suit) {
-        cardsTable.add(new Card(suit, CardRanks.ACE));
-        cardsTable.add(new Card(suit, CardRanks.TWO));
-        cardsTable.add(new Card(suit, CardRanks.THREE));
-        cardsTable.add(new Card(suit, CardRanks.FOUR));
-        cardsTable.add(new Card(suit, CardRanks.FIVE));
-        cardsTable.add(new Card(suit, CardRanks.SIX));
-        cardsTable.add(new Card(suit, CardRanks.SEVEN));
-        cardsTable.add(new Card(suit, CardRanks.EIGHT));
-        cardsTable.add(new Card(suit, CardRanks.NINE));
-        cardsTable.add(new Card(suit, CardRanks.TEN));
-        cardsTable.add(new Card(suit, CardRanks.JACK));
-        cardsTable.add(new Card(suit, CardRanks.QUEEN));
-        cardsTable.add(new Card(suit, CardRanks.KING));
+    private  void addSuitToDeck(Card.Suits suit) {
+        cards.add(new Card(suit, Card.Ranks.ACE));
+        cards.add(new Card(suit, Card.Ranks.TWO));
+        cards.add(new Card(suit, Card.Ranks.THREE));
+        cards.add(new Card(suit, Card.Ranks.FOUR));
+        cards.add(new Card(suit, Card.Ranks.FIVE));
+        cards.add(new Card(suit, Card.Ranks.SIX));
+        cards.add(new Card(suit, Card.Ranks.SEVEN));
+        cards.add(new Card(suit, Card.Ranks.EIGHT));
+        cards.add(new Card(suit, Card.Ranks.NINE));
+        cards.add(new Card(suit, Card.Ranks.TEN));
+        cards.add(new Card(suit, Card.Ranks.JACK));
+        cards.add(new Card(suit, Card.Ranks.QUEEN));
+        cards.add(new Card(suit, Card.Ranks.KING));
     }
-
-    public static ArrayList<Card> getCardsTable() {
-        return cardsTable;
-    }
-
-    static {
-        cardsTable = new ArrayList<Card>(CARD_TABLE_SIZE);
-        addSuitToDeck(CardSuits.CLUBS);
-        addSuitToDeck(CardSuits.SPADES);
-        addSuitToDeck(CardSuits.HEARTS);
-        addSuitToDeck(CardSuits.DIAMONDS);
-    }
-
     public Deck() {
         random = new Random();
-        cards = new LinkedList<CardEntity>();
-        setup();
+        cards = new LinkedList<Card>();
+        reset();
     }
-    private void setup() {
-        for (int cardIndex = 0; cardIndex < MAX_CARDS; cardIndex++) {
-            cards.add(new CardEntity(cardIndex));
+    public void reset() {
+        cards.clear();
+        for (int i = 0; i < DECK_AMMOUNT; i++) {
+            addSuitToDeck(Card.Suits.CLUBS);
+            addSuitToDeck(Card.Suits.SPADES);
+            addSuitToDeck(Card.Suits.HEARTS);
+            addSuitToDeck(Card.Suits.DIAMONDS);
         }
     }
+    public Card getCard() {
+        Card card = cards.pollFirst();
+        return card; //NOTE: poolFirst returns null if the list is empty
+    }
+
     public void shuffle() {
-        topCard = 0;
-        for (int shuffleIter = 0; shuffleIter < MAX_SHUFFLE_ITER; shuffleIter++) {
+        for (int iter = 0; iter < MAX_SHUFFLE_ITER; iter++) {
             int cardIndex = random.nextInt(cards.size());
-            int otherCardIndex = random.nextInt(cards.size());
-            CardEntity card = cards.get(cardIndex);
-            CardEntity otherCard = cards.get(otherCardIndex);
-            cards.set(otherCardIndex, card);
-            cards.set(cardIndex, otherCard);
+            int cardNewIndex = random.nextInt(cards.size());
+            Card card = cards.remove(cardIndex);
+            cards.add(cardNewIndex, card);
         }
-    }
-    public CardEntity getCard(boolean faceDown) {
-        return cards.get(topCard++);
     }
 
     public void print() {
-        for (CardEntity card : cards) {
-            System.out.println(card.getCard());
+        for (Card card : cards) {
+            System.out.println(card);
         }
     }
+
+    public void render() {
+        for (Card card : cards) {
+            card.render();
+        }
+    };
 }

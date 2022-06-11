@@ -18,6 +18,7 @@ public class Main {
     private long window;
     GameManager gameManager;
 
+    private Game game;
 
     public void run() {
         System.out.println("Hello LWJGL " + Version.getVersion() + "!");
@@ -62,7 +63,7 @@ public class Main {
                 glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
         });
 
-        glfwSetKeyCallback(window, Keyboard::kayCallback);
+        glfwSetKeyCallback(window, Input::kayCallback);
         glfwSetMonitorCallback(Monitor::monitorCallback);
 
         // Get the thread stack and push a new frame
@@ -102,26 +103,36 @@ public class Main {
         gameManager = new GameManager();
         gameManager.init();
 
+        game = new Game();
+
+
+
         // Set the clear color
         glClearColor(0.7f, 0.7f, 1.0f, 0.0f);
 
+        double lastTime = glfwGetTime();
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while ( !glfwWindowShouldClose(window) ) {
-
+            double currentTime = glfwGetTime();
+            float deltaTime = (float)(currentTime - lastTime);
             // Update object, so we clean the screen.
-            gameManager.update(0.0f);
+            gameManager.update(deltaTime);
+            game.update(deltaTime);
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
             // Draw updated object over the clean screen.
-            gameManager.render();
+            game.render();
+            //gameManager.render();
 
             glfwSwapBuffers(window); // swap the color buffers
 
             // Poll for window events. The key callback above will only be
             // invoked during this call.
             glfwPollEvents();
+
+            lastTime = currentTime;
         }
     }
 

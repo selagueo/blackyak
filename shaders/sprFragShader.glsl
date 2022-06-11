@@ -16,7 +16,7 @@ void main()
     float projection = dot(vec3(0, 0, 1), fNorm);
     if(projection < 0)
     {
-        finalTile = vec2(1, 0);
+        finalTile = vec2(0, 4);
     }
     vec2 texCoord = (fTexCoords * ratio) + (finalTile * ratio);
     color = texture(texture0, texCoord) * fColor;
