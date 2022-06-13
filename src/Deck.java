@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Deck {
     private final int DECK_AMMOUNT = 1;
-    private final int MAX_SHUFFLE_ITER = 512;
+    private final int MAX_SHUFFLE_ITER = 1024;
     private LinkedList<Card> cards;
     private Random random;
 

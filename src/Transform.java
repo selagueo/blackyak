@@ -30,6 +30,7 @@ public class Transform {
 
     public static float lerp(float a, float b, float t)
     {
+        //return a + (b - a) * t;
         return (1.0f - t) * a + t * b;
     }
 
@@ -51,13 +52,4 @@ public class Transform {
         Vector2f result = new Vector2f(x, y);
         return result;
     }
-
-    /*
-    float smoothstep(float a, float b, float x)
-    {
-        float t = saturate((x - a)/(b - a));
-        return t*t*(3.0 - (2.0*t));
-    }
-    */
-
 }

@@ -1,5 +1,9 @@
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.ALC;
+import org.lwjgl.openal.ALCCapabilities;
+import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
@@ -7,6 +11,7 @@ import java.nio.*;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
@@ -16,20 +21,21 @@ public class Main {
 
     // The window handle
     private long window;
-    GameManager gameManager;
-
     private Game game;
 
-    public void run() {
-        System.out.println("Hello LWJGL " + Version.getVersion() + "!");
+    private long audioContext;
+    private long audioDevice;
 
+    public void run() {
         init();
         loop();
 
+        // free audio
+        alcDestroyContext(audioContext);
+        alcCloseDevice(audioDevice);
         // Free the window callbacks and destroy the window
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
-
         // Terminate GLFW and free the error callback
         glfwTerminate();
         glfwSetErrorCallback(null).free();
@@ -47,7 +53,7 @@ public class Main {
         // Configure GLFW
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // the window will be resizable
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 
@@ -70,13 +76,10 @@ public class Main {
         try ( MemoryStack stack = stackPush() ) {
             IntBuffer pWidth = stack.mallocInt(1); // int*
             IntBuffer pHeight = stack.mallocInt(1); // int*
-
             // Get the window size passed to glfwCreateWindow
             glfwGetWindowSize(window, pWidth, pHeight);
-
             // Get the resolution of the primary monitor
             GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
             // Center the window
             glfwSetWindowPos(
                     window,
@@ -89,49 +92,50 @@ public class Main {
         glfwMakeContextCurrent(window);
         // Enable v-sync
         glfwSwapInterval(1);
-
         // Make the window visible
         glfwShowWindow(window);
+
+        // Initialize the audio device
+        String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
+        audioDevice = alcOpenDevice(defaultDeviceName);
+
+        int[] attributes = {0};
+        audioContext = alcCreateContext(audioDevice, attributes);
+        alcMakeContextCurrent(audioContext);
+
+        ALCCapabilities alcCapabilities = ALC.createCapabilities(audioDevice);
+        ALCapabilities alCapabilities = AL.createCapabilities(alcCapabilities);
+        if (!alCapabilities.OpenAL10) {
+            assert false : "Audio library not supported.";
+        }
+
 
         GL.createCapabilities();
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+        game = new Game();
     }
 
     private void loop() {
-        gameManager = new GameManager();
-        gameManager.init();
-
-        game = new Game();
-
-
-
         // Set the clear color
         glClearColor(0.7f, 0.7f, 1.0f, 0.0f);
-
         double lastTime = glfwGetTime();
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
-        while ( !glfwWindowShouldClose(window) ) {
+        while ( game.getRunning() && !glfwWindowShouldClose(window) ) {
             double currentTime = glfwGetTime();
             float deltaTime = (float)(currentTime - lastTime);
             // Update object, so we clean the screen.
-            gameManager.update(deltaTime);
             game.update(deltaTime);
-
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-
             // Draw updated object over the clean screen.
             game.render();
-            //gameManager.render();
-
             glfwSwapBuffers(window); // swap the color buffers
-
             // Poll for window events. The key callback above will only be
             // invoked during this call.
             glfwPollEvents();
-
             lastTime = currentTime;
         }
     }

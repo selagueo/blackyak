@@ -7,18 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="file://$MODULE_DIR$/lib/MacOS" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="file://$MODULE_DIR$/lib/MacOS" />
-        </SOURCES>
-        <jarDirectory url="file://$MODULE_DIR$/lib/MacOS" recursive="false" />
-        <jarDirectory url="file://$MODULE_DIR$/lib/MacOS" recursive="false" type="SOURCES" />
-      </library>
-    </orderEntry>
+    <orderEntry type="library" name="MacOS" level="project" />
+    <orderEntry type="library" name="Windows" level="project" />
   </component>
 </module>
