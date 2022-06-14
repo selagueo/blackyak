@@ -8,8 +8,7 @@ public class Hand {
     private float timer = 0.0f;
     private int index = 0;
 
-    public Hand()
-    {
+    public Hand() {
         this.hand = new ArrayList<Card>();
         this.chips = new ArrayList<Chip>();
         aceCounter = 0;
@@ -28,6 +27,7 @@ public class Hand {
             this.chips.add(new Chip(type, texture));
         }
     }
+
     ArrayList<Chip> getChips() {
         this.chips.clear();
         int currentCash = this.cash;
@@ -52,20 +52,22 @@ public class Hand {
     }
 
     public int getCash() {
-        return  this.cash;
+        return this.cash;
     }
-    public void getCard (Card card, Animation animation) {
+
+    public void getCard(Card card, Animation animation) {
         card.setAnimation(animation);
         hand.add(card);
         timer = 0.0f;
     }
+
     public void clear() {
         this.hand.clear();
         this.timer = 0;
         this.index = 0;
     }
 
-    public int getValue () {
+    public int getValue() {
         int value = 0;
         aceCounter = 0;
         for (Card card : this.hand) {
@@ -89,22 +91,19 @@ public class Hand {
         return value;
     }
 
-    public void update(float deltaTime)
-    {
-        if(timer >= 2.0f)
-        {
+    public void update(float deltaTime) {
+        if (timer >= 2.0f) {
             timer = 0.0f;
         }
 
         if (index < hand.size() && hand.get(index).getAnimation() != null && timer == 0.0f) {
-            if(!hand.get(index).getAnimation().isPlaying()) {
+            if (!hand.get(index).getAnimation().isPlaying()) {
                 hand.get(index).getAnimation().play();
                 ++index;
             }
         }
 
-        for(int i = 0; i < hand.size(); ++i)
-        {
+        for (int i = 0; i < hand.size(); ++i) {
             timer += deltaTime;
             hand.get(i).update(deltaTime);
         }
@@ -114,15 +113,16 @@ public class Hand {
         for (Card card : hand) {
             card.render();
         }
-    };
+    }
+
+    ;
 
     private int getAceValue() {
         aceCounter++;
-        return  11;
+        return 11;
     }
 
-    public Card getLastCard()
-    {
+    public Card getLastCard() {
         return hand.get(hand.size() - 1);
     }
 

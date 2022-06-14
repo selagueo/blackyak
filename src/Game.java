@@ -16,6 +16,7 @@ public class Game {
         GAME_OVER,
         END_GAME,
     }
+
     private enum WinState {
         PLAYER_INIT,
         PLAYER_WON,
@@ -35,7 +36,8 @@ public class Game {
     private int betAmount;
 
     Vector4f fontColor = new Vector4f(0.8f, 0.8f, 0.8f, 1.0f);
-    public Game () {
+
+    public Game() {
         loadAssets();
         deck = new Deck();
         handPlayer = new Hand();
@@ -43,7 +45,7 @@ public class Game {
         state = State.INITIALIZE;
         winState = WinState.PLAYER_INIT;
         background = new Sprite(AssetManager.getTexture("table"),
-                1280*0.5f, 720*0.5f,
+                1280 * 0.5f, 720 * 0.5f,
                 1280, 720,
                 0);
         handPlayer.setCash(475);
@@ -54,8 +56,7 @@ public class Game {
         return this.running;
     }
 
-    private void loadAssets()
-    {
+    private void loadAssets() {
         AssetManager.addShader("default", "shaders/vertexShader.glsl", "shaders/fragmentShader.glsl");
         AssetManager.addShader("spritesheet", "shaders/sprVertexShader.glsl", "shaders/sprFragShader.glsl");
         AssetManager.addTexture("table", "images/table.png");
@@ -72,29 +73,43 @@ public class Game {
 
     public void update(float deltaTime) {
         switch (state) {
-            case INITIALIZE: doInitializeState(); break;
-            case GAME_START: doGameStartState(); break;
-            case PLAYER_TURN: doPlayerTurnState(); break;
-            case DEALER_TURN: doDealerTurnState(); break;
-            case PLAYER_BUST: doPlayerBustState(); break;
-            case DEALER_BUST: doDealerBustState(); break;
-            case GAME_OVER: doGameOverState(); break;
-            case END_GAME: doEndGameState(); break;
+            case INITIALIZE:
+                doInitializeState();
+                break;
+            case GAME_START:
+                doGameStartState();
+                break;
+            case PLAYER_TURN:
+                doPlayerTurnState();
+                break;
+            case DEALER_TURN:
+                doDealerTurnState();
+                break;
+            case PLAYER_BUST:
+                doPlayerBustState();
+                break;
+            case DEALER_BUST:
+                doDealerBustState();
+                break;
+            case GAME_OVER:
+                doGameOverState();
+                break;
+            case END_GAME:
+                doEndGameState();
+                break;
         }
 
-        if(state == State.PLAYER_TURN || state == State.DEALER_TURN ||
-           state == State.PLAYER_BUST || state == State.DEALER_BUST)
-        {
-            if(timer > 1.0f) {
+        if (state == State.PLAYER_TURN || state == State.DEALER_TURN ||
+                state == State.PLAYER_BUST || state == State.DEALER_BUST) {
+            if (timer > 1.0f) {
                 handPlayer.update(deltaTime);
             }
-            if(timer > 4.0f)
-            {
+            if (timer > 4.0f) {
                 handDealer.update(deltaTime);
             }
             timer += deltaTime;
         }
-        if(Input.getInstance().getKeyDown(GLFW_KEY_D)) {
+        if (Input.getInstance().getKeyDown(GLFW_KEY_D)) {
             printState();
         }
     }
@@ -121,7 +136,7 @@ public class Game {
 
         if (Input.getInstance().start()) {
             state = State.GAME_START;
-        }else if (Input.getInstance().getKeyDown(GLFW_KEY_ESCAPE)) {
+        } else if (Input.getInstance().getKeyDown(GLFW_KEY_ESCAPE)) {
             running = false;
         }
     }
@@ -131,27 +146,27 @@ public class Game {
 
         Card card = deck.getCard();
         handPlayer.getCard(card, new DealCardAnim(card.getSprite(),
-                                               card.getSprite().getTransform().position,
-                                               new Vector2f(1280.0f*0.5f, 200.0f)));
+                card.getSprite().getTransform().position,
+                new Vector2f(1280.0f * 0.5f, 200.0f)));
         card = deck.getCard();
         handPlayer.getCard(card, new DealCardAnim(card.getSprite(),
-                                               card.getSprite().getTransform().position,
-                                               new Vector2f(1280.0f*0.5f - 6*6, 200.0f + 6*6)));
+                card.getSprite().getTransform().position,
+                new Vector2f(1280.0f * 0.5f - 6 * 6, 200.0f + 6 * 6)));
         card = deck.getCard();
         handDealer.getCard(card, new DealCardAnim(card.getSprite(),
-                                               card.getSprite().getTransform().position,
-                                               new Vector2f(1280.0f*0.5f - 200, 500.0f)));
+                card.getSprite().getTransform().position,
+                new Vector2f(1280.0f * 0.5f - 200, 500.0f)));
         card = deck.getCard();
         handDealer.getCard(card, new DealCardFaceDownAnim(card.getSprite(),
-                                               card.getSprite().getTransform().position,
-                                               new Vector2f(1280.0f*0.5f + 22*4.2f - 200, 500.0f))); //TODO This card should face down.
+                card.getSprite().getTransform().position,
+                new Vector2f(1280.0f * 0.5f + 22 * 4.2f - 200, 500.0f))); //TODO This card should face down.
         state = State.PLAYER_TURN;
     }
 
     private void doPlayerTurnState() {
         Card lastPlayerCard = handPlayer.getLastCard();
         Card lastDealerCard = handDealer.getLastCard();
-        if(lastPlayerCard.getAnimation().isDone() && lastDealerCard.getAnimation().isDone()) {
+        if (lastPlayerCard.getAnimation().isDone() && lastDealerCard.getAnimation().isDone()) {
             int value = handPlayer.getValue();
             if (value < 21) {
                 if (Input.getInstance().playerStand()) {
@@ -173,10 +188,11 @@ public class Game {
             }
         }
     }
+
     private void doDealerTurnState() {
         Card lastPlayerCard = handPlayer.getLastCard();
         Card lastDealerCard = handDealer.getLastCard();
-        if(lastPlayerCard.getAnimation().isDone() && lastDealerCard.getAnimation().isDone()) {
+        if (lastPlayerCard.getAnimation().isDone() && lastDealerCard.getAnimation().isDone()) {
             int value = handDealer.getValue();
             if (value < 17) {
                 Card card = deck.getCard();
@@ -189,24 +205,27 @@ public class Game {
             }
         }
     }
+
     private void doPlayerBustState() {
         Card lastPlayerCard = handPlayer.getLastCard();
         Card lastDealerCard = handDealer.getLastCard();
-        if(lastPlayerCard.getAnimation().isDone() && lastDealerCard.getAnimation().isDone()) {
+        if (lastPlayerCard.getAnimation().isDone() && lastDealerCard.getAnimation().isDone()) {
             System.out.println("Player Burn");
             winState = WinState.PLAYER_LOST;
             state = State.GAME_OVER;
         }
     }
+
     private void doDealerBustState() {
         Card lastPlayerCard = handPlayer.getLastCard();
         Card lastDealerCard = handDealer.getLastCard();
-        if(lastPlayerCard.getAnimation().isDone() && lastDealerCard.getAnimation().isDone()) {
+        if (lastPlayerCard.getAnimation().isDone() && lastDealerCard.getAnimation().isDone()) {
             System.out.println("Dealer Burn");
             winState = WinState.PLAYER_WON;
             state = State.GAME_OVER;
         }
     }
+
     private void doGameOverState() {
         switch (winState) {
             case PLAYER_WON -> handPlayer.giveCash(betAmount * 2);
@@ -218,6 +237,7 @@ public class Game {
             state = State.INITIALIZE;
         }
     }
+
     private void doEndGameState() {
         int valuePlayer = handPlayer.getValue();
         int valueDealer = handDealer.getValue();
@@ -228,7 +248,7 @@ public class Game {
         } else if (valuePlayer < valueDealer) {
             winState = WinState.PLAYER_LOST;
         }
-        state =  State.GAME_OVER;
+        state = State.GAME_OVER;
     }
 
     public void render() {
@@ -242,49 +262,84 @@ public class Game {
         renderPlayerChips();
 
         switch (state) {
-            case INITIALIZE: renderInitializeState(); break;
-            case GAME_START: renderGameStartState(); break;
-            case PLAYER_TURN: renderPlayerTurnState(); break;
-            case DEALER_TURN: renderDealerTurnState(); break;
-            case PLAYER_BUST: renderPlayerBustState(); break;
-            case DEALER_BUST: renderDealerBustState(); break;
-            case GAME_OVER: renderGameOverState(); break;
-            case END_GAME: renderEndGameState(); break;
+            case INITIALIZE:
+                renderInitializeState();
+                break;
+            case GAME_START:
+                renderGameStartState();
+                break;
+            case PLAYER_TURN:
+                renderPlayerTurnState();
+                break;
+            case DEALER_TURN:
+                renderDealerTurnState();
+                break;
+            case PLAYER_BUST:
+                renderPlayerBustState();
+                break;
+            case DEALER_BUST:
+                renderDealerBustState();
+                break;
+            case GAME_OVER:
+                renderGameOverState();
+                break;
+            case END_GAME:
+                renderEndGameState();
+                break;
         }
     }
+
     void renderInitializeState() {
         Font.getInstance().render("PRESS: SPACE TO START - ESC TO QUIT", 180, 680, fontColor, 4);
         Font.getInstance().render("UP Arrow (+ 5)", 120, 580, fontColor, 2);
         Font.getInstance().render("Bet: " + betAmount, 120, 550, fontColor, 3);
         Font.getInstance().render("DOWN Arrow (- 5)", 120, 520, fontColor, 2);
-    };
+    }
+
+    ;
+
     void renderGameStartState() {
         renderPlayerHand(fontColor);
-    };
+    }
+
+    ;
+
     void renderPlayerTurnState() {
         Font.getInstance().render("PRESS: SPACE TO HIT - ENTER TO STAND", 180, 680, fontColor, 4);
 
         Card lastPlayerCard = handPlayer.getLastCard();
-        if(lastPlayerCard.getAnimation().isDone()) {
+        if (lastPlayerCard.getAnimation().isDone()) {
             renderPlayerHand(fontColor);
         } else {
             Font.getInstance().render("Player Hand: ", 150, 150, fontColor, 4);
         }
         renderBetAmount();
-    };
+    }
+
+    ;
+
     void renderDealerTurnState() {
         Font.getInstance().render("PRESS: SPACE TO HIT - ENTER TO STAND", 180, 680, fontColor, 4);
         renderPlayerHand(fontColor);
         renderBetAmount();
-    };
+    }
+
+    ;
+
     void renderPlayerBustState() {
         renderPlayerHand(new Vector4f(1, 0, 0, 1));
         renderDealerHand(fontColor);
-    };
+    }
+
+    ;
+
     void renderDealerBustState() {
         renderPlayerHand(fontColor);
         renderDealerHand(new Vector4f(1, 0, 0, 1));
-    };
+    }
+
+    ;
+
     void renderGameOverState() {
         Font.getInstance().render("PRESS SPACE TO PLAY AGAIN - ESC TO QUIT", 180, 680, fontColor, 4);
         switch (winState) {
@@ -295,18 +350,21 @@ public class Game {
 
         Vector4f playerColor = new Vector4f(fontColor);
         Vector4f dealerColor = new Vector4f(fontColor);
-        if(winState == WinState.PLAYER_LOST)
-        {
+        if (winState == WinState.PLAYER_LOST) {
             playerColor = new Vector4f(1, 0, 0, 1);
         }
-        if(winState == WinState.PLAYER_WON)
-        {
+        if (winState == WinState.PLAYER_WON) {
             dealerColor = new Vector4f(1, 0, 0, 1);
         }
         renderPlayerHand(playerColor);
         renderDealerHand(dealerColor);
-    };
-    void renderEndGameState() { /* NOTE: nothing */ };
+    }
+
+    ;
+
+    void renderEndGameState() { /* NOTE: nothing */ }
+
+    ;
 
     private void renderPlayerHand(Vector4f color) {
         Font.getInstance().render("Player Hand: " + handPlayer.getValue(), 150, 150, color, 4);
@@ -319,10 +377,11 @@ public class Game {
     private void renderBetAmount() {
         Font.getInstance().render("YOUR BET: " + betAmount, 740, 150, fontColor, 4);
     }
+
     private void renderPlayerChips() {
         int posY = 240;
         int posX = 240;
-        Font.getInstance().render("$" + handPlayer.getCash(), (1280/2) - 20, 30, new Vector4f(0, 0, 0, 1), 2);
+        Font.getInstance().render("$" + handPlayer.getCash(), (1280 / 2) - 20, 30, new Vector4f(0, 0, 0, 1), 2);
         Renderer.getInstance().setShader(AssetManager.getShader("default"));
         int[] chipOffset = new int[5];
         ArrayList<Chip> chips = handPlayer.getChips();

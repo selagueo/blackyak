@@ -26,13 +26,13 @@ public class Shader {
         String fragmentSource = "";
         try {
             vertexSource = new String(Files.readAllBytes(Paths.get(vertexFilepath)));
-        }catch(IOException e){
+        } catch (IOException e) {
             System.out.println("Error: fail to load " + vertexFilepath);
             assert false : "Error: Could not open file for shader: '" + vertexFilepath + "'";
         }
         try {
             fragmentSource = new String(Files.readAllBytes(Paths.get(fragmentFilepath)));
-        }catch(IOException e){
+        } catch (IOException e) {
             System.out.println("Error: fail to load " + fragmentFilepath);
             assert false : "Error: Could not open file for shader: '" + fragmentFilepath + "'";
         }
@@ -46,8 +46,7 @@ public class Shader {
         glShaderSource(vertexID, vertexSource);
         glCompileShader(vertexID);
         int success = glGetShaderi(vertexID, GL_COMPILE_STATUS);
-        if(success == GL_FALSE)
-        {
+        if (success == GL_FALSE) {
             int len = glGetShaderi(vertexID, GL_INFO_LOG_LENGTH);
             System.out.println("Error: '" + vertexFilepath + "'\n\tVertex shader compilation failed.");
             System.out.println(glGetShaderInfoLog(vertexID, len));
@@ -58,8 +57,7 @@ public class Shader {
         glShaderSource(fragmentID, fragmentSource);
         glCompileShader(fragmentID);
         success = glGetShaderi(fragmentID, GL_COMPILE_STATUS);
-        if(success == GL_FALSE)
-        {
+        if (success == GL_FALSE) {
             int len = glGetShaderi(fragmentID, GL_INFO_LOG_LENGTH);
             System.out.println("Error: '" + fragmentFilepath + "'\n\tFragment shader compilation failed.");
             System.out.println(glGetShaderInfoLog(fragmentID, len));

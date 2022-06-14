@@ -8,8 +8,7 @@ public abstract class Animation {
     protected boolean isPlaying;
     protected boolean isDone;
 
-    public Animation(Sprite sprite)
-    {
+    public Animation(Sprite sprite) {
         this.sprite = sprite;
         this.start = new Vector2f();
         this.target = new Vector2f();
@@ -17,6 +16,7 @@ public abstract class Animation {
         this.isPlaying = false;
         this.isDone = false;
     }
+
     public Animation(Sprite sprite, Vector2f start, Vector2f target) {
         this.sprite = sprite;
         this.start = start;
@@ -27,15 +27,14 @@ public abstract class Animation {
     }
 
     public abstract void update(float deltaTime);
+
     public abstract void play();
 
-    public boolean isPlaying()
-    {
+    public boolean isPlaying() {
         return isPlaying;
     }
 
-    public boolean isDone()
-    {
+    public boolean isDone() {
         return this.isDone;
     }
 }

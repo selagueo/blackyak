@@ -23,9 +23,11 @@ the dealer's hand).
 ```
 
 ## Contributing
+
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate. For any bug report please contact me.
 
 ## License
+
 [Lightweight Java Game Library License](https://www.lwjgl.org/license)

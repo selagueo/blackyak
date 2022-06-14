@@ -47,7 +47,7 @@ public class Main {
         GLFWErrorCallback.createPrint(System.err).set();
 
         // Initialize GLFW. Most GLFW functions will not work before doing this.
-        if ( !glfwInit() )
+        if (!glfwInit())
             throw new IllegalStateException("Unable to initialize GLFW");
 
         // Configure GLFW
@@ -60,12 +60,12 @@ public class Main {
 
         // Create the window
         window = glfwCreateWindow(1280, 720, "Black Yak", NULL, NULL);
-        if ( window == NULL )
+        if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
                 glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
         });
 
@@ -73,7 +73,7 @@ public class Main {
         glfwSetMonitorCallback(Monitor::monitorCallback);
 
         // Get the thread stack and push a new frame
-        try ( MemoryStack stack = stackPush() ) {
+        try (MemoryStack stack = stackPush()) {
             IntBuffer pWidth = stack.mallocInt(1); // int*
             IntBuffer pHeight = stack.mallocInt(1); // int*
             // Get the window size passed to glfwCreateWindow
@@ -124,9 +124,9 @@ public class Main {
         double lastTime = glfwGetTime();
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
-        while ( game.getRunning() && !glfwWindowShouldClose(window) ) {
+        while (game.getRunning() && !glfwWindowShouldClose(window)) {
             double currentTime = glfwGetTime();
-            float deltaTime = (float)(currentTime - lastTime);
+            float deltaTime = (float) (currentTime - lastTime);
             // Update object, so we clean the screen.
             game.update(deltaTime);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer

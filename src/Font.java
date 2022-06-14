@@ -21,7 +21,7 @@ public class Font {
     static private Vector2f ratio;
 
     public static Font getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new Font();
         }
         return instance;
@@ -29,7 +29,7 @@ public class Font {
 
     private Font() {
         atlas = AssetManager.getTexture("font");
-        ratio = new Vector2f((float)glyphWidth/(float)atlas.getWidth(), (float)glyphHeight/(float)atlas.getHeight());
+        ratio = new Vector2f((float) glyphWidth / (float) atlas.getWidth(), (float) glyphHeight / (float) atlas.getHeight());
     }
 
     private void beginRenderGlyph(Vector4f color) {
@@ -64,14 +64,14 @@ public class Font {
         atlas.detach();
         Renderer.getInstance().getShader().detach();
     }
+
     private void renderGlyph(Transform transform, Vector4f color, char glyph) {
         int index = (glyph - ' ');
         int x = index % glyphCountX;
         int y = (glyphCountY - 1) - (index / glyphCountX);
 
         Renderer.getInstance().getShader().uploadMat4f("uWorld", transform.getWorldMatrix());
-        if(ratio.x > 0.0f || ratio.y > 0.0f)
-        {
+        if (ratio.x > 0.0f || ratio.y > 0.0f) {
             Renderer.getInstance().getShader().uploadVec2f("tile", new Vector2f(x, y));
             Renderer.getInstance().getShader().uploadVec2f("ratio", ratio);
         }
@@ -82,9 +82,9 @@ public class Font {
         Vector2f position = new Vector2f(x, y);
         beginRenderGlyph(color);
         for (char glyph : text.toCharArray()) {
-            Transform transform = new Transform(position, new Vector2f(glyphWidth*scale, glyphHeight*scale), 0);
+            Transform transform = new Transform(position, new Vector2f(glyphWidth * scale, glyphHeight * scale), 0);
             renderGlyph(transform, color, glyph);
-            position.x += (glyphWidth*scale);
+            position.x += (glyphWidth * scale);
         }
         endRenderGlyph();
     }

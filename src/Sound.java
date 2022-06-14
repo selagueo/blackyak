@@ -12,8 +12,7 @@ public class Sound {
 
     boolean isPlaying = false;
 
-    public Sound(String filepath)
-    {
+    public Sound(String filepath) {
 
     }
 

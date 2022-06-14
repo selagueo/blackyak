@@ -13,8 +13,8 @@ public class Texture {
     private int width;
     private int height;
     private int channels;
-    public Texture(String filepath)
-    {
+
+    public Texture(String filepath) {
         ID = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, ID);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -22,33 +22,31 @@ public class Texture {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-        try(MemoryStack stack = stackPush())
-        {
+        try (MemoryStack stack = stackPush()) {
             IntBuffer pWidth = stack.mallocInt(1);
             IntBuffer pHeight = stack.mallocInt(1);
             IntBuffer pChannels = stack.mallocInt(1);
             stbi_set_flip_vertically_on_load(true);
             ByteBuffer data = stbi_load(filepath, pWidth, pHeight, pChannels, 0);
-            if(data != null) {
+            if (data != null) {
                 width = pWidth.get(0);
                 height = pHeight.get(0);
                 channels = pChannels.get(0);
                 int format = -1;
-                switch(channels)
-                {
-                    case 3:
-                    {
+                switch (channels) {
+                    case 3: {
                         format = GL_RGB;
-                    }break;
-                    case 4:
-                    {
+                    }
+                    break;
+                    case 4: {
                         format = GL_RGBA;
-                    }break;
-                    default:
-                    {
+                    }
+                    break;
+                    default: {
                         System.out.println("Error: image format not supported");
                         assert false : "Error: image format not supported";
-                    }break;
+                    }
+                    break;
                 }
                 glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
                 stbi_image_free(data);
@@ -57,27 +55,23 @@ public class Texture {
 
     }
 
-    public void bind()
-    {
+    public void bind() {
         glBindTexture(GL_TEXTURE_2D, ID);
     }
 
-    public  void detach()
-    {
+    public void detach() {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    public int getWidth()
-    {
+    public int getWidth() {
         return width;
     }
 
-    public int getHeight()
-    {
+    public int getHeight() {
         return height;
     }
-    public int getID()
-    {
+
+    public int getID() {
         return ID;
     }
 }

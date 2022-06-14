@@ -9,7 +9,13 @@ public class Deck {
     private LinkedList<Card> cards;
     private Random random;
 
-    private  void addSuitToDeck(Card.Suits suit) {
+    public Deck() {
+        random = new Random();
+        cards = new LinkedList<Card>();
+        reset();
+    }
+
+    private void addSuitToDeck(Card.Suits suit) {
         cards.add(new Card(suit, Card.Ranks.ACE));
         cards.add(new Card(suit, Card.Ranks.TWO));
         cards.add(new Card(suit, Card.Ranks.THREE));
@@ -24,11 +30,7 @@ public class Deck {
         cards.add(new Card(suit, Card.Ranks.QUEEN));
         cards.add(new Card(suit, Card.Ranks.KING));
     }
-    public Deck() {
-        random = new Random();
-        cards = new LinkedList<Card>();
-        reset();
-    }
+
     public void reset() {
         cards.clear();
         for (int i = 0; i < DECK_AMMOUNT; i++) {
@@ -38,6 +40,7 @@ public class Deck {
             addSuitToDeck(Card.Suits.DIAMONDS);
         }
     }
+
     public Card getCard() {
         Card card = cards.pollFirst();
         return card; //NOTE: poolFirst returns null if the list is empty
@@ -62,5 +65,7 @@ public class Deck {
         for (Card card : cards) {
             card.render();
         }
-    };
+    }
+
+    ;
 }

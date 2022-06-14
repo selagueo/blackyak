@@ -4,6 +4,7 @@ public class Chip {
     enum Type {
         _100(0), _25(1), _10(2), _5(3), _1(4);
         private int value;
+
         Type(int value) {
             this.value = value;
         }
@@ -12,6 +13,7 @@ public class Chip {
             return value;
         }
     }
+
     private Type type;
     private Sprite sprite;
     public static final int scale = 50;

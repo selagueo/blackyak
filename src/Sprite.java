@@ -21,27 +21,25 @@ public class Sprite {
     private Vector2f ratio;
     Vector2f spritesheetPos;
 
-    public Sprite(Texture texture, float xPox, float yPos, float xScale, float yScale, float rotation)
-    {
+    public Sprite(Texture texture, float xPox, float yPos, float xScale, float yScale, float rotation) {
         this.transform = new Transform(new Vector2f(xPox, yPos), new Vector2f(xScale, yScale), rotation);
         this.color = new Vector4f(1, 1, 1, 1);
         this.texture = texture;
         this.ratio = new Vector2f(0.0f, 0.0f);
-        this.spritesheetPos = new Vector2f();
-    }
-    public Sprite(Texture texture, float xPox, float yPos, float xScale, float yScale, float rotation, float tileWidth, float tileHeight)
-    {
-        this.transform = new Transform(new Vector2f(xPox, yPos), new Vector2f(xScale, yScale), rotation);
-        this.color = new Vector4f(1, 1, 1, 1);
-        this.texture = texture;
-        this.ratio = new Vector2f(0.0f, 0.0f);
-        this.ratio.x = (float)tileWidth / (float)(texture.getWidth());
-        this.ratio.y = (float)tileHeight / (float)texture.getHeight();
         this.spritesheetPos = new Vector2f();
     }
 
-    public void render()
-    {
+    public Sprite(Texture texture, float xPox, float yPos, float xScale, float yScale, float rotation, float tileWidth, float tileHeight) {
+        this.transform = new Transform(new Vector2f(xPox, yPos), new Vector2f(xScale, yScale), rotation);
+        this.color = new Vector4f(1, 1, 1, 1);
+        this.texture = texture;
+        this.ratio = new Vector2f(0.0f, 0.0f);
+        this.ratio.x = (float) tileWidth / (float) (texture.getWidth());
+        this.ratio.y = (float) tileHeight / (float) texture.getHeight();
+        this.spritesheetPos = new Vector2f();
+    }
+
+    public void render() {
         Renderer renderer = Renderer.getInstance();
         Matrix4f projectionMat = new Matrix4f();
         projectionMat.ortho(0, 1280, 0, 720, 0, 1000);
@@ -58,13 +56,12 @@ public class Sprite {
         Matrix4f worldMat = transform.getWorldMatrix();
         renderer.getShader().uploadMat4f("uWorld", worldMat);
         renderer.getShader().uploadVec4f("uColor", color);
-        if(texture != null) {
+        if (texture != null) {
             glActiveTexture(GL_TEXTURE0);
             renderer.getShader().uploadTexture("texture0", 0);
             texture.bind();
 
-            if(ratio.x > 0.0f || ratio.y > 0.0f)
-            {
+            if (ratio.x > 0.0f || ratio.y > 0.0f) {
                 renderer.getShader().uploadVec2f("tile", spritesheetPos);
                 renderer.getShader().uploadVec2f("ratio", ratio);
             }
@@ -79,29 +76,25 @@ public class Sprite {
         glDisableVertexAttribArray(1);
         ARBVertexArrayObject.glBindVertexArray(0);
         renderer.getShader().detach();
-        if(texture != null) {
+        if (texture != null) {
             texture.detach();
         }
     }
 
-    public Transform getTransform()
-    {
+    public Transform getTransform() {
 
         return this.transform;
     }
 
-    public Vector4f getColor()
-    {
+    public Vector4f getColor() {
         return this.color;
     }
 
-    public Texture getTexture()
-    {
+    public Texture getTexture() {
         return this.texture;
     }
 
-    public Vector2f getRatio()
-    {
+    public Vector2f getRatio() {
         return this.ratio;
     }
 
@@ -109,8 +102,7 @@ public class Sprite {
         this.spritesheetPos = spritesheetPos;
     }
 
-    public Vector2f getSpritesheetPos()
-    {
+    public Vector2f getSpritesheetPos() {
         return this.spritesheetPos;
     }
 }

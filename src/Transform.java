@@ -8,16 +8,14 @@ public class Transform {
     public float rotationZ;
     public float rotationY;
 
-    Transform(Vector2f position, Vector2f scale, float rotation)
-    {
+    Transform(Vector2f position, Vector2f scale, float rotation) {
         this.position = position;
         this.scale = scale;
         this.rotationZ = rotation;
         this.rotationY = 0.0f;
     }
 
-    public Matrix4f getWorldMatrix()
-    {
+    public Matrix4f getWorldMatrix() {
         Matrix4f transMat = new Matrix4f();
         Matrix4f scaleMat = new Matrix4f();
         Matrix4f rotatMat = new Matrix4f();
@@ -28,25 +26,21 @@ public class Transform {
         return transMat.mul(rotatMat.mul(scaleMat));
     }
 
-    public static float lerp(float a, float b, float t)
-    {
+    public static float lerp(float a, float b, float t) {
         //return a + (b - a) * t;
         return (1.0f - t) * a + t * b;
     }
 
-    public static float invLerp(float a, float b, float v)
-    {
+    public static float invLerp(float a, float b, float v) {
         return (v - a) / (b - a);
     }
 
-    public static float reMap(float iMin, float iMax, float oMin, float oMax, float v)
-    {
+    public static float reMap(float iMin, float iMax, float oMin, float oMax, float v) {
         float t = invLerp(iMin, iMax, v);
         return lerp(oMin, oMax, t);
     }
 
-    public static Vector2f lerpV2(Vector2f a, Vector2f b, float t)
-    {
+    public static Vector2f lerpV2(Vector2f a, Vector2f b, float t) {
         float x = lerp(a.x, b.x, t);
         float y = lerp(a.y, b.y, t);
         Vector2f result = new Vector2f(x, y);

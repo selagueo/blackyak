@@ -25,29 +25,26 @@ public class Renderer {
 
     static private Renderer instance;
 
-    static public Renderer getInstance()
-    {
-        if(instance == null)
-        {
+    static public Renderer getInstance() {
+        if (instance == null) {
             instance = new Renderer();
         }
         return instance;
     }
 
-    private Renderer()
-    {
+    private Renderer() {
         VAO = glGenVertexArrays();
         glBindVertexArray(VAO);
 
         // create an array with four vertices
-        float[] vertices =  {
-                 0.5f,  0.5f,    1.0f, 1.0f,
-                 0.5f, -0.5f,    1.0f, 0.0f,
-                -0.5f,  0.5f,    0.0f, 1.0f,
+        float[] vertices = {
+                0.5f, 0.5f, 1.0f, 1.0f,
+                0.5f, -0.5f, 1.0f, 0.0f,
+                -0.5f, 0.5f, 0.0f, 1.0f,
 
-                 0.5f, -0.5f,    1.0f, 0.0f,
-                -0.5f, -0.5f,    0.0f, 0.0f,
-                -0.5f,  0.5f,    0.0f, 1.0f
+                0.5f, -0.5f, 1.0f, 0.0f,
+                -0.5f, -0.5f, 0.0f, 0.0f,
+                -0.5f, 0.5f, 0.0f, 1.0f
         };
 
         int VBO = glGenBuffers();
@@ -62,18 +59,15 @@ public class Renderer {
         glEnableVertexAttribArray(1);
     }
 
-    public int getVAO()
-    {
+    public int getVAO() {
         return VAO;
     }
 
-    public Shader getShader()
-    {
+    public Shader getShader() {
         return shader;
     }
 
-    public void setShader(Shader shader)
-    {
+    public void setShader(Shader shader) {
         this.shader = shader;
     }
 }
