@@ -4,7 +4,9 @@ Black yak is a simple Black Jack game coded on Java using "Light Weight Java Gam
 
 ## Installation
 
-We don't have an installation method yet, just running the code on a IDE like IntelliJ will make the game run. (:
+We don't have an installation method yet.
+To be able to compile the code just select the configuration of the folder, select the JDK (I've used v15), add the vm option "-XstartOnFirstThread" and 
+add the main Main. Also remember to select the MacOS config or the Windows config depending on your pc (sorry linux users lol).
 
 ## Usage
 
